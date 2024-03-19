@@ -1,10 +1,10 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType, ReactFlowProvider } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType,useReactFlow, ReactFlowProvider } from "reactflow";
 import "reactflow/dist/style.css";
 import { WorkflowPost} from "../../Redux/AppReducer/action"
-
+import "./index.css"
 const initialNodes = [
   {
     id: "0",
@@ -39,11 +39,18 @@ const fitViewOptions = {
 
 const Page = () => {
   const reactFlowWrapper = useRef(null);
+  const connectingNodeId = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [addnode, setAddnode] = useState(false);
-  const [addChildeNode, setAddChildeNode] = useState(false);
-  const [parentNode, setParentNode] = useState(null);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { screenToFlowPosition } = useReactFlow();
+  const onConnect = useCallback(
+    (params) => {
+      // reset the start node on connections
+      connectingNodeId.current = null;
+      setEdges((eds) => addEdge(params, eds))
+    },
+    [],
+  );
   const [savedNodes, setSavedNodes] = useState([]);
   const [savedEdges, setSavedEdges] = useState([]);
   const [saveduser, setSavedUser] = useState("Project 1");
@@ -56,7 +63,7 @@ const Page = () => {
     savedNodes:savedNodes
  }
 
-  //  console.log("payloaddd1",payload)
+   console.log("payloaddd1",payload)
 
   const handleSave = () => {
     setSavedNodes(nodes);
@@ -73,80 +80,38 @@ const Page = () => {
       }, 2000);
   };
   
-  const initialNodeType = {
-    id : getId(),
-    type : 'default',
-    position : { x: initialNodes[0].position.x, y: nodes.length*100},
-    data: { label: 'New Node' },
-    width: 150
-  }
-
-  const initialEdge = {
-    id: String(parseInt(Math.random(100000000)*1000000)),
-    source: nodes[nodes.length-1].id,
-    target: nodes[nodes.length-1].id,
-    label: '+',
-    labelBgPadding: [8, 4],
-    labelBgBorderRadius: 4,
-    labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-    },
-  }
-  const onConnect = useCallback(
-    (params) => setEdges((els) => addEdge(params, els)),
-    []
-  );
   
-  useEffect(()=>{
-    if(addnode){
-      const findFirstNode = nodes.find(item=>item.id===initialEdge.target)
-      setEdges((eds) => eds.concat({
-        ...initialEdge,
-        // source: parentNode.id,
-      }));
-      setAddnode(false);
-      setParentNode(null);
-    }
-    if(addChildeNode){
-      setEdges((eds) => eds.concat({
-        id: String(parseInt(Math.random(100000000)*1000000)),
-        source: parentNode.id,
-        target: nodes[nodes.length-1].id,
-        // label: '+',
-        labelBgPadding: [8, 4],
-        labelBgBorderRadius: 4,
-        labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-        },
-      }));
-      setAddChildeNode(false);
-      setParentNode(null);
-    }
-  },[nodes])
 
-  const handleEdgeClick = (param, data) => {
-    // console.log(data);
-    const findSourceNode = nodes.find((item)=>item.id===data.source);
-    setNodes((nds) => nds.concat({...initialNodeType, 
-        data:{ parentId: data.target, ...initialNodeType.data }}));
-    setParentNode(findSourceNode);
-    setAddnode(true);
-  }
+  const onConnectStart = useCallback((_, { nodeId }) => {
+    connectingNodeId.current = nodeId;
+  }, []);
 
-  const handleNodeClick = (e, data) => {
-    const filterNodeswithSameSource = nodes.filter((node)=>node?.data?.parentId===data?.id);
-    setNodes((nds) => nds.concat({
-      id : getId(),
-      type : 'default',
-      position : { x: data.position.x+filterNodeswithSameSource.length*160, y: data.position.y+100},
-      data: { label: 'New Node', parentId: data.id },
-      width: 150,
-    }));
-    setAddChildeNode(true);
-    setParentNode(data);
-  }
+  const onConnectEnd = useCallback(
+    (event) => {
+      if (!connectingNodeId.current) return;
+
+      const targetIsPane = event.target.classList.contains('react-flow__pane');
+
+      if (targetIsPane) {
+        const id = getId();
+        const newNode = {
+          id,
+          position: screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+          }),
+          data: { label: `Node ${id}` },
+          origin: [0.5, 0.0],
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) =>
+          eds.concat({ id, source: connectingNodeId.current, target: id }),
+        );
+      }
+    },
+    [screenToFlowPosition],
+  );
 
    
   const handleGoBackOrDelete = () => {
@@ -170,22 +135,29 @@ const Page = () => {
         <button  onClick={handleSave} className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Save Node </button>
         </div>
        
+        <div className="wrapper" ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
         fitView
-        snapToGrid={true}
-        snapGrid={[15, 15]}
-        onEdgeClick={handleEdgeClick}
-        onNodeClick={handleNodeClick}
-        attributionPosition="bottom-left"
-        fitViewOptions={fitViewOptions}
-      ></ReactFlow>
+        fitViewOptions={{ padding: 2 }}
+        nodeOrigin={[0.5, 0]}
+      />
+    </div>
       </div>
   );
 };
 
-export default Page;
+// export default Page;
+
+
+export default () => (
+  <ReactFlowProvider>
+    <Page />
+  </ReactFlowProvider>
+);
