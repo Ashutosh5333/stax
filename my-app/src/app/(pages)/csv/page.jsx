@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Getdata } from "@/app/Redux/AppReducer/action";
 import { ReactFlow, useNodesState, addEdge, useEdgesState } from "reactflow";
-
+import "reactflow/dist/style.css";
 const Page = () => {
   const fileInputRef = useRef("");
   const fileInputRef1 = useRef("");
@@ -21,9 +21,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const userdata = useSelector((state) => state.workflow);
   const [workflowData, setWorkflowData] = useState(null);
-  //  console.log("userdataaa",userdata)
-  // const [nodes, setNodes] = useNodesState([]);
-  // const [edges, setEdges] = useEdgesState([]);
+
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = useCallback(
@@ -57,7 +55,7 @@ const Page = () => {
       },
     });
   };
-  //  console.log("data",parsedData)
+ 
 
   const handlermoveseleted = () => {
     setSelectedFileName("");
@@ -88,7 +86,7 @@ const Page = () => {
     const selectedUserData = userdata.find(
       (data) => data.saveduser === selectedUser
     );
-    // console.log("dataaa",selectedUserData)
+  
     if (selectedUserData) {
       setWorkflowData(selectedUserData);
       setEdges(selectedUserData.savedEdges);
@@ -97,12 +95,7 @@ const Page = () => {
       setWorkflowData(null);
     }
   };
-  console.log("setuserkey0", workflowData);
-  console.log("nodess", nodes, edges);
-  // const onConnect = useCallback(
-  //   (params) => setEdges((els) => addEdge(params, els)),
-  //   []
-  // );
+ 
 
   return (
     <>
