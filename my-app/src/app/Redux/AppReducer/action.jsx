@@ -25,20 +25,20 @@ const getdatareq = () => {
   
 const Createdatareq = () => {
   return {
-    type: types.GETDATAREQ,
+    type: types.CREATEWORKFLOWREQ,
   };
 };
 
 const Createdatasuccess = (payload) => {
   return {
-    type: types.GETDATASUCESS,
+    type: types.CREATEWORKFLOWSUCESS,
     payload,
   };
 };
 
 const Createdatafailure = () => {
   return {
-    type: types.GETDATAFAILURE,
+    type: types.CREATEWORKFLOWSUCESS,
   };
 };
 
@@ -56,3 +56,15 @@ const Createdatafailure = () => {
    }
   
    
+   
+ export  const WorkflowPost = (payload) => (dispatch) => {
+  dispatch(Createdatareq())
+  return axios.post(`http://localhost:8000/work/create` ,payload)
+  .then((res) =>{
+return     dispatch(Createdatasuccess(res.data))
+  })
+  .catch((err) =>{
+return    dispatch(Createdatafailure())
+  })
+}
+
