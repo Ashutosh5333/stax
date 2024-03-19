@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType, ReactFlowProvider } from "reactflow";
 import "reactflow/dist/style.css";
-import {Getdata, WorkflowPost} from "../../Redux/AppReducer/action"
+import { WorkflowPost} from "../../Redux/AppReducer/action"
 
 const initialNodes = [
   {
@@ -49,23 +49,15 @@ const Page = () => {
   const [saveduser, setSavedUser] = useState("Project 1");
    const dispatch = useDispatch()
 
-    // useEffect(() =>{
-    //      dispatch(Getdata)
-    //      .then((res) =>{
-    //       console.log("res",res)
-    //      })
-    //      .catch((err) =>{
-    //       console.log("err",err)
-    //      })
-    // },[])
-  //  console.log("payloaddd1",payload)
 
   const payload ={
     saveduser:saveduser,
     savedEdges:savedEdges,
     savedNodes:savedNodes
  }
-//  console.log("payloaddd1",payload)
+
+  //  console.log("payloaddd1",payload)
+
   const handleSave = () => {
     setSavedNodes(nodes);
     setSavedEdges(edges);
@@ -80,7 +72,6 @@ const Page = () => {
     })
       }, 2000);
   };
-  // console.log("payloaddd",payload)
   
   const initialNodeType = {
     id : getId(),
@@ -106,6 +97,7 @@ const Page = () => {
     (params) => setEdges((els) => addEdge(params, els)),
     []
   );
+  
   useEffect(()=>{
     if(addnode){
       const findFirstNode = nodes.find(item=>item.id===initialEdge.target)
@@ -171,8 +163,7 @@ const Page = () => {
     <div  style={{ width: "100vw", height: "100vh" }}>
         
         <div className=" flex justify-between">
-        <button onClick={handleGoBackOrDelete} disabled={nodes.length<2} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center ">
-          {/* { nodes.length>2 ? 'Delete Node': "" } */}
+         <button onClick={handleGoBackOrDelete} disabled={nodes.length<2} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center ">
              Delete node
           </button>
          <input onChange={(e)=>setSavedUser(e.target.value)} className="mt-5 px-4 outline-none" value={saveduser} placeholder="name" />

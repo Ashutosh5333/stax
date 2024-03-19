@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Papa from "papaparse";
 import { FiUpload } from "react-icons/fi";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Getdata } from "@/app/Redux/AppReducer/action";
+import { ReactFlow, useNodesState, addEdge, useEdgesState } from "reactflow";
 
-
- const Page = () => {
+const Page = () => {
   const fileInputRef = useRef("");
   const fileInputRef1 = useRef("");
   const [parsedData, setParsedData] = useState([]);
@@ -15,8 +17,23 @@ import toast, { Toaster } from 'react-hot-toast';
   const [clickUpload, setClickUpload] = useState(false);
   const [values, setValues] = useState([]);
   const [selectedArray, setSelectedArray] = useState([]);
+  const [selectedUserKey, setSelectedUserKey] = useState("");
+  const dispatch = useDispatch();
+  const userdata = useSelector((state) => state.workflow);
+  const [workflowData, setWorkflowData] = useState(null);
+  //  console.log("userdataaa",userdata)
+  // const [nodes, setNodes] = useNodesState([]);
+  // const [edges, setEdges] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const onConnect = useCallback(
+    (params) => setEdges((els) => addEdge(params, els)),
+    []
+  );
 
- 
+  useEffect(() => {
+    dispatch(Getdata);
+  }, []);
 
   const changeHandler = (event) => {
     const selectedFile = event.target.files[0];
@@ -58,15 +75,40 @@ import toast, { Toaster } from 'react-hot-toast';
   };
 
   const handleUpload = () => {
-     toast.success("Uploaded File.......")
-     setTimeout(()=>{
-       setClickUpload(true);
-     },1000)
+    toast.success("Uploaded File.......");
+    setTimeout(() => {
+      setClickUpload(true);
+    }, 1000);
   };
+
+  const handleUserSelect = (event) => {
+    const selectedUser = event.target.value;
+    setSelectedUserKey(selectedUser);
+
+    const selectedUserData = userdata.find(
+      (data) => data.saveduser === selectedUser
+    );
+    // console.log("dataaa",selectedUserData)
+    if (selectedUserData) {
+      setWorkflowData(selectedUserData);
+      setEdges(selectedUserData.savedEdges);
+      setNodes(selectedUserData.savedNodes);
+    } else {
+      setWorkflowData(null);
+    }
+  };
+  console.log("setuserkey0", workflowData);
+  console.log("nodess", nodes, edges);
+  // const onConnect = useCallback(
+  //   (params) => setEdges((els) => addEdge(params, els)),
+  //   []
+  // );
 
   return (
     <>
-      <div className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center">
+      <div
+        className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center"
+      >
         <div className="container-box px-2 py-2 flex flex-col sm:flex-row sm:justify-between border-pink-800">
           <div className="w-[100%]  bg-[#FFFFFF] rounded-md shadow-md px-4 py-4 border-green-700">
             <div
@@ -148,10 +190,41 @@ import toast, { Toaster } from 'react-hot-toast';
           </div>
         </div>
       </div>
+   
+      <div className="py-4 mt-10" style={{ width: "100vw", height: "100vh" }}>
+        <div className="border-2 py-2 w-[30%] m-auto">
+          <select
+            onChange={handleUserSelect}
+            value={selectedUserKey}
+            className="py-2 px-2"
+          >
+            {userdata.map((data, index) => (
+              <option className="p-1" key={index}>
+                {data.saveduser}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="px-4" style={{ width: "100vw", height: "100vh" }}>
+          {workflowData ? (
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              elements={nodes.concat(edges)}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              fitView
+              attributionPosition="bottom-left"
+            />
+          ) : (
+            <p className="text-center py-2">No workflow data available</p>
+          )}
+        </div>
+      </div>
 
-    
-      <Toaster/>
+      <Toaster />
     </>
   );
 };
-export default Page
+export default Page;

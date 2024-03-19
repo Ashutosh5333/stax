@@ -46,7 +46,7 @@ const Createdatafailure = () => {
 
  export  const Getdata = (dispatch) => {
       dispatch(getdatareq())
-      return axios.get(`https://fakestoreapi.com/products`)
+      return axios.get(`https://pear-average-caterpillar.cyclic.app/work/data`)
       .then((res) =>{
   return     dispatch(getdatasuccess(res.data))
       })
@@ -59,7 +59,7 @@ const Createdatafailure = () => {
    
  export  const WorkflowPost = (payload) => (dispatch) => {
   dispatch(Createdatareq())
-  return axios.post(`http://localhost:8000/work/create` ,payload)
+  return axios.post(`https://pear-average-caterpillar.cyclic.app/work/create` ,payload)
   .then((res) =>{
 return     dispatch(Createdatasuccess(res.data))
   })
