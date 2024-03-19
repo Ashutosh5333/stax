@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Getdata } from "@/app/Redux/AppReducer/action";
 import { ReactFlow, useNodesState, addEdge, useEdgesState } from "reactflow";
 import "reactflow/dist/style.css";
+import "../workflow/index.css"
 const Page = () => {
   const fileInputRef = useRef("");
   const fileInputRef1 = useRef("");
@@ -95,6 +96,9 @@ const Page = () => {
       setWorkflowData(null);
     }
   };
+
+   console.log("noeddddd",nodes,edges)
+   console.log("workflow",workflowData)
  
   return (
     <>

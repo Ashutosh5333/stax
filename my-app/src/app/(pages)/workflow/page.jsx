@@ -14,28 +14,10 @@ const initialNodes = [
   },
 ];
 
-const initialEdges = [
-  {
-    id: "edges-e5-7",
-    source: "0",
-    type: "smoothstep",
-    target: "1",
-    label: '+',
-    animated: true,
-    labelBgPadding: [8, 4],
-    labelBgBorderRadius: 4,
-    labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-    },
-  },
-];
+
 
 let id = 1;
 const getId = () => `${id++}`;
-const fitViewOptions = {
-  padding: 3,
-};
 
 const Page = () => {
   const reactFlowWrapper = useRef(null);
@@ -43,10 +25,9 @@ const Page = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
+  const [currentStep, setCurrentStep] = useState(0);
   const onConnect = useCallback(
     (params) => {
-      // reset the start node on connections
-      // connectingNodeId.current = null;
       setEdges((eds) => addEdge(params, eds))
     },
     [setEdges],
@@ -63,15 +44,16 @@ const Page = () => {
     savedNodes:savedNodes
  }
 
-  //  console.log("payloaddd1",payload)
+   console.log("payloaddd1",payload)
 
   const handleSave = () => {
     setSavedNodes(nodes);
     setSavedEdges(edges);
-    
+    setCurrentStep(1);
       setTimeout(() => {
          dispatch(WorkflowPost(payload))
     .then((res)=>{
+      setCurrentStep(2);
       console.log("ress",res)
     })
     .catch((err) =>{
@@ -133,7 +115,12 @@ const Page = () => {
          <input onChange={(e)=>setSavedUser(e.target.value)} className="mt-5 px-4 outline-none" value={saveduser} placeholder="name" />
         <button  onClick={handleSave} className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Save Node </button>
         </div>
-        <ReactFlowProvider>
+        {/* Progress bar or visual representation */}
+      <div>
+        {currentStep === 0 && <p>Step 1 of 2: Creating nodes</p>}
+        {currentStep === 1 && <p>Step 2 of 2: Saving nodes</p>}
+      </div>
+      <ReactFlowProvider>
      <div className="wrapper" ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
@@ -153,13 +140,7 @@ const Page = () => {
       </div>
   );
 };
-// Page.display.name="Page";
-// export default Page;
-// export default () => (
-//   <ReactFlowProvider>
-//     <Page />
-//   </ReactFlowProvider>
-// );
+
 
 const PageWithProvider = () => (
   <ReactFlowProvider>
