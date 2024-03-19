@@ -46,10 +46,10 @@ const Page = () => {
   const onConnect = useCallback(
     (params) => {
       // reset the start node on connections
-      connectingNodeId.current = null;
+      // connectingNodeId.current = null;
       setEdges((eds) => addEdge(params, eds))
     },
-    [],
+    [setEdges],
   );
   const [savedNodes, setSavedNodes] = useState([]);
   const [savedEdges, setSavedEdges] = useState([]);
@@ -79,8 +79,6 @@ const Page = () => {
     })
       }, 2000);
   };
-  
-  
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -125,6 +123,7 @@ const Page = () => {
 
 
   return (
+   
     <div  style={{ width: "100vw", height: "100vh" }}>
         
         <div className=" flex justify-between">
@@ -134,8 +133,8 @@ const Page = () => {
          <input onChange={(e)=>setSavedUser(e.target.value)} className="mt-5 px-4 outline-none" value={saveduser} placeholder="name" />
         <button  onClick={handleSave} className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Save Node </button>
         </div>
-       
-        <div className="wrapper" ref={reactFlowWrapper}>
+        <ReactFlowProvider>
+     <div className="wrapper" ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -149,15 +148,23 @@ const Page = () => {
         nodeOrigin={[0.5, 0]}
       />
     </div>
+
+      </ReactFlowProvider>
       </div>
   );
 };
-
+// Page.display.name="Page";
 // export default Page;
+// export default () => (
+//   <ReactFlowProvider>
+//     <Page />
+//   </ReactFlowProvider>
+// );
 
-
-export default () => (
+const PageWithProvider = () => (
   <ReactFlowProvider>
     <Page />
   </ReactFlowProvider>
 );
+
+export default PageWithProvider;

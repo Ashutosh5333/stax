@@ -1,6 +1,6 @@
 "use client";
-import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Papa from "papaparse";
 import { FiUpload } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
@@ -26,12 +26,12 @@ const Page = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = useCallback(
     (params) => setEdges((els) => addEdge(params, els)),
-    []
+    [setEdges]
   );
 
   useEffect(() => {
     dispatch(Getdata);
-  }, []);
+  }, [dispatch]);
 
   const changeHandler = (event) => {
     const selectedFile = event.target.files[0];
@@ -96,7 +96,6 @@ const Page = () => {
     }
   };
  
-
   return (
     <>
       <div
