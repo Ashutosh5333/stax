@@ -6,7 +6,7 @@ import { FiUpload } from "react-icons/fi";
 import toast, { Toaster } from 'react-hot-toast';
 
 
- const page = () => {
+ const Page = () => {
   const fileInputRef = useRef("");
   const fileInputRef1 = useRef("");
   const [parsedData, setParsedData] = useState([]);
@@ -154,4 +154,4 @@ import toast, { Toaster } from 'react-hot-toast';
     </>
   );
 };
-export default page
+export default Page
