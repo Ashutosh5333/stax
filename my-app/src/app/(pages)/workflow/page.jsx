@@ -1,7 +1,9 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType, ReactFlowProvider } from "reactflow";
 import "reactflow/dist/style.css";
+import {Getdata} from "../../Redux/AppReducer/action"
 
 const initialNodes = [
   {
@@ -37,12 +39,41 @@ const fitViewOptions = {
 
 const Page = () => {
   const reactFlowWrapper = useRef(null);
-  
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [addnode, setAddnode] = useState(false);
   const [addChildeNode, setAddChildeNode] = useState(false);
   const [parentNode, setParentNode] = useState(null);
+  const [savedNodes, setSavedNodes] = useState([]);
+  const [savedEdges, setSavedEdges] = useState([]);
+  const [saveduser, setSavedUser] = useState("Project 1");
+   const dispatch = useDispatch()
+
+    useEffect(() =>{
+         dispatch(Getdata)
+         .then((res) =>{
+          console.log("res",res)
+         })
+         .catch((err) =>{
+          console.log("err",err)
+         })
+    },[])
+
+
+   const payload ={
+      saveduser:saveduser,
+       savedEdges:savedEdges,
+       savedNodes:savedNodes
+   }
+  
+  const handleSave = () => {
+    setSavedNodes(nodes);
+    setSavedEdges(edges);
+  };
+  // console.log("savedNodes",savedNodes)
+  // console.log("savedEdgeses",savedEdges)
+  console.log("payloaddd",payload)
+  
   const initialNodeType = {
     id : getId(),
     type : 'default',
@@ -82,7 +113,7 @@ const Page = () => {
         id: String(parseInt(Math.random(100000000)*1000000)),
         source: parentNode.id,
         target: nodes[nodes.length-1].id,
-        label: '+',
+        // label: '+',
         labelBgPadding: [8, 4],
         labelBgBorderRadius: 4,
         labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
@@ -117,11 +148,7 @@ const Page = () => {
     setParentNode(data);
   }
 
-    // console.log("parentnode",parentNode)
-    // console.log("nnodesss",nodes)
-    // console.log("edgess",edges)
-
-
+   
   const handleGoBackOrDelete = () => {
       const filteredNodes = nodes.filter(node => node.id !== nodes[nodes.length - 1].id);
   
@@ -133,8 +160,14 @@ const Page = () => {
   
 
   return (
-    <div ref={reactFlowWrapper} style={{ width: "100vw", height: "100vh" }}>
-        <button onClick={handleGoBackOrDelete}>Go Back / Delete</button>
+    <div  style={{ width: "100vw", height: "100vh" }}>
+        
+        <div className=" flex justify-between">
+        <button onClick={handleGoBackOrDelete} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Delete Node </button>
+         <input onChange={(e)=>setSavedUser(e.target.value)} className="mt-5 px-4 outline-none" value={saveduser} placeholder="name" />
+        <button  onClick={handleSave} className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Save Node </button>
+        </div>
+       
       <ReactFlow
         nodes={nodes}
         edges={edges}
