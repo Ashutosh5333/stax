@@ -10,6 +10,9 @@ export default function Home() {
 
   return (
     <main className=" border-black">
+
+     <h2 className="text-center  text-xl py-4 font-semibold"> Work Flow builder </h2>
+
       <div className="max-w-md px-2 py-8 mx-auto mt-8">
       <ul className="flex text-xl justify-between px-4">
         <li

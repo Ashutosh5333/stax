@@ -48,6 +48,14 @@ const Navbar = () => {
     <div>
       <nav className="bg-gray-800 p-4 cursor-pointer">
         <div className="flex justify-between items-center">
+        <div>
+            <h1 className="text-white text-lg font-bold">
+              <Link href="/" onClick={handleFlowClick}>
+                  Home
+              </Link>
+            </h1>
+          </div>
+
           <div>
             <h1 className="text-white text-lg font-bold">
               <Link href="/flow" onClick={handleFlowClick}>
@@ -85,8 +93,6 @@ const Navbar = () => {
               Login
             </h1>
            }
-            
-
 
           </div>
         </div>
