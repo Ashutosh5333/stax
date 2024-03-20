@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { SignupPost } from "../Redux/AppReducer/action";
-
+import toast, { Toaster } from "react-hot-toast";
 export const Signup = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -53,7 +53,9 @@ export const Signup = () => {
     dispatch(SignupPost(formData))
       .then((res) => {
         console.log("resss", res);
-
+           if(res?.payload?.msg=="Signup successful"){
+            toast.success("Signup Successful");
+           }
       })
       .catch((err) => {
         console.log("err", err);
@@ -99,6 +101,8 @@ export const Signup = () => {
           Signup
         </button>
       </form>
+      <Toaster />
     </div>
+    
   );
 };

@@ -135,7 +135,7 @@ export  const LoginPost = (payload) => (dispatch) => {
 return     dispatch(loginsuccess(res.data))
   })
   .catch((err) =>{
-return    dispatch(loginfailure())
+return    dispatch(loginfailure(err))
   })
 }
 
