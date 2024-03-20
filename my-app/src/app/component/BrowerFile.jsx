@@ -80,6 +80,11 @@ const BrowerFile = () => {
     }, 1000);
   };
 
+  //  console.log("parsedata",parsedData)
+
+  //  console.log("workflowData",workflowData)
+  //  console.log("suerdata",userdata)
+
   const handleUserSelect = (event) => {
     const selectedUser = event.target.value;
     setSelectedUserKey(selectedUser);
@@ -100,7 +105,7 @@ const BrowerFile = () => {
   return (
     <>
       <div className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center">
-        <div className="container-box px-2 py-2 flex flex-col sm:flex-row sm:justify-between border-pink-800">
+        <div className="container-box  px-2 py-2 flex flex-col sm:flex-row sm:justify-between border-pink-800">
           <div className="w-[100%]  bg-[#FFFFFF] rounded-md shadow-md px-4 py-4 border-green-700">
             <div
               className={`border-2 ${" cursor-pointer border-dashed border-[#EBEBEB]"} py-16 sm:py-20 mt-5 bg-[#FFFFFF] rounded-lg w-[100%]`}
@@ -180,16 +185,66 @@ const BrowerFile = () => {
             </button>
           </div>
         </div>
+
+        <div className="relative  overflow-x-auto">
+          {clickUpload && (
+            <table
+              className="w-full text-left border-separate border-spacing-x-0 border-spacing-y-[15px]
+           px-4 py-2 rounded-lg bg-[#F5F5F5] border-red-600"
+            >
+              <thead>
+                <tr>
+                  {tableRows.map((rows, index) => (
+                    <th
+                      key={index}
+                      className="border-gray-400 capitalize text-center text-[.8rem] py-2 px-2 sm:text-base"
+                    >
+                      { rows}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody className=" bg-[#F5F5F5] border-green-600 ">
+                {values.map((subarray, index) => (
+                  <tr
+                    key={index}
+                    className="bg-[rgb(255,255,255)]  relative mb-4  text-left text-sm font-Figtree text-[#000000] w-[90%] m-auto
+               border-2 border-red-500 rounded-2xl px-8 py-3 shadow-lg"
+                  >
+                    {subarray.slice(0, 3).map((value, subIndex) => (
+                      <td
+                        key={subIndex}
+                        className="py-2 px-8  border-green-400"
+                      >
+                        {subIndex == 1 ? (
+                          <div className="py-4  sm:text-sm border-yellow-500 text-blue-700 underline">
+                            <td>{value}</td>
+                          </div>
+                        ) : (
+                          <div className="py-4 border-yellow-500">{value}</div>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
 
       {/*   */}
 
-      <div className="py-4 mt-20" style={{ width: "100vw", height: "100vh" }}>
-        <div className="py-2 px-4 w-[20%] m-auto">
+      <div
+        className="py-4  relative top-40 "
+        style={{ width: "100vw", height: "100vh" }}
+      >
+        <div className="py-2 px-2 w-[30%] m-auto">
           <select
             onChange={handleUserSelect}
             value={selectedUserKey}
-            className="py-2 px-8 text-center border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="py-2 px-2 text-center border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {userdata.map((data, index) => (
               <option className="p-1" key={index}>

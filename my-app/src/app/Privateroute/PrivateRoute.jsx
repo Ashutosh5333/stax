@@ -6,7 +6,9 @@ const PrivateRoute = ({ children }) => {
     const router = useRouter();
     const Authenticate =
       typeof window !== "undefined" ? !!localStorage.getItem("token") : false;
-  
+      //  const token = JSON.parse(localStorage.getItem("token"))
+        // console.log("token",token)
+
     useEffect(() => {
       if (!Authenticate) {
         router.push("/");
