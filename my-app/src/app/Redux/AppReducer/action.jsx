@@ -42,6 +42,50 @@ const Createdatafailure = () => {
   };
 };
 
+// Login post
+
+const loginreq = () => {
+  return {
+    type: types.LOGINPOSTREQ,
+  };
+};
+
+const loginsuccess = (payload) => {
+  return {
+    type: types.LOGINPOSTSUCESS,
+    payload,
+  };
+};
+
+const loginfailure = () => {
+  return {
+    type: types.LOGINPOSTFAILURE,
+  };
+};
+
+// create workflow post 
+
+
+const signupreq = () => {
+return {
+  type: types.SIGNUPREQ,
+};
+};
+
+const signupsuccess = (payload) => {
+return {
+  type: types.SIGNUPSUCESS,
+  payload,
+};
+};
+
+const signupfailure = () => {
+return {
+  type: types.SIGNUPFAILURE,
+};
+};
+
+
 
 
  export  const Getdata = (dispatch) => {
@@ -65,6 +109,33 @@ return     dispatch(Createdatasuccess(res.data))
   })
   .catch((err) =>{
 return    dispatch(Createdatafailure())
+  })
+}
+
+
+//  Signup 
+
+export  const SignupPost = (payload) => (dispatch) => {
+  dispatch(signupreq())
+  return axios.post(`https://pear-average-caterpillar.cyclic.app/user/register` ,payload)
+  .then((res) =>{
+return     dispatch(signupsuccess(res.data))
+  })
+  .catch((err) =>{
+return    dispatch(signupfailure())
+  })
+}
+
+//  Login 
+
+export  const LoginPost = (payload) => (dispatch) => {
+  dispatch(loginreq())
+  return axios.post(`https://pear-average-caterpillar.cyclic.app/user/login` ,payload)
+  .then((res) =>{
+return     dispatch(loginsuccess(res.data))
+  })
+  .catch((err) =>{
+return    dispatch(loginfailure())
   })
 }
 
