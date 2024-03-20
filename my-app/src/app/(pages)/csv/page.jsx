@@ -10,6 +10,7 @@ import BrowerFile from "../../component/BrowerFile";
 const Page = () => {
   return (
     <>
+    <PrivateRoute>
       <div className="Box-container  w-[100%] m-auto flex justify-between">
         <div
           className="SideBar-container cursor-pointer  hidden sm:block  py-2 px-2 w-[20%] 
@@ -56,6 +57,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+      </PrivateRoute>
     </>
   );
 };

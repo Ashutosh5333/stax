@@ -7,6 +7,7 @@ import ReactFlow, {
   MarkerType,
   ReactFlowProvider,
 } from "reactflow";
+import PrivateRoute from "@/app/Privateroute/PrivateRoute";
 import { useDispatch } from "react-redux";
 
 import "reactflow/dist/style.css";
@@ -63,7 +64,6 @@ const Page = () => {
     savedNodes: savedNodes,
   };
 
-  //  console.log("payloaddd1",payload)
 
   const handleSave = () => {
     setSavedNodes(nodes);
@@ -189,7 +189,10 @@ const Page = () => {
   };
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <>
+    <PrivateRoute>
+
+     <div style={{ width: "100vw", height: "100vh" }}>
       <div className=" flex justify-between">
         <button
           onClick={handleGoBackOrDelete}
@@ -232,6 +235,9 @@ const Page = () => {
         fitViewOptions={fitViewOptions}
       ></ReactFlow>
     </div>
+
+    </PrivateRoute>
+    </>
   );
 };
 

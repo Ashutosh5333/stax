@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { LoginPost, Userlogged } from "../Redux/AppReducer/action";
+import { useRouter } from "next/navigation";
 export const Login = () => {
+  const router = useRouter()
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -52,7 +54,8 @@ export const Login = () => {
           toast.success("Login successful");
           localStorage.setItem("token",JSON.stringify(res?.payload?.token))
           localStorage.setItem("user",JSON.stringify(res?.payload?.data))
-          dispatch(Userlogged(res?.payload?.data))
+          // dispatch(Userlogged(res?.payload?.data))
+          router.push("/flow")
          }
          if(res?.type=="LOGINPOSTFAILURE"){
           toast.error("Check Password");
