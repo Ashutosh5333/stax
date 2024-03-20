@@ -65,9 +65,9 @@ const Navbar = () => {
           </div>
 
           <div className=" flex justify-between gap-5">
-            <h1 className="text-white text-lg font-bold">
+            <div className="text-white text-lg font-bold">
               {data ? <span>{data.name}</span> : "Profile"}
-            </h1>
+            </div>
 
             <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
               <Image

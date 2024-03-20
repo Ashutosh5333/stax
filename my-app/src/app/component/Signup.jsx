@@ -55,7 +55,13 @@ export const Signup = () => {
         console.log("resss", res);
            if(res?.payload?.msg=="Signup successful"){
             toast.success("Signup Successful");
+            setFormData({
+              name: "",
+              email: "",
+              password: "",
+             })
            }
+          
       })
       .catch((err) => {
         console.log("err", err);

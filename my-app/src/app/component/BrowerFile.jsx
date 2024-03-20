@@ -10,99 +10,96 @@ import { ReactFlow, useNodesState, addEdge, useEdgesState } from "reactflow";
 import "reactflow/dist/style.css";
 // import "../workflow/index.css";
 
-
 const BrowerFile = () => {
-    const fileInputRef = useRef("");
-    const fileInputRef1 = useRef("");
-    const [parsedData, setParsedData] = useState([]);
-    const [selectedFileName, setSelectedFileName] = useState("");
-    const [tableRows, setTableRows] = useState([]);
-    const [clickUpload, setClickUpload] = useState(false);
-    const [values, setValues] = useState([]);
-    const [selectedArray, setSelectedArray] = useState([]);
-    const [selectedUserKey, setSelectedUserKey] = useState("");
-    const dispatch = useDispatch();
-    const userdata = useSelector((state) => state.workflow);
-    const [workflowData, setWorkflowData] = useState(null);
-  
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const onConnect = useCallback(
-      (params) => setEdges((els) => addEdge(params, els)),
-      [setEdges]
+  const fileInputRef = useRef("");
+  const fileInputRef1 = useRef("");
+  const [parsedData, setParsedData] = useState([]);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [tableRows, setTableRows] = useState([]);
+  const [clickUpload, setClickUpload] = useState(false);
+  const [values, setValues] = useState([]);
+  const [selectedArray, setSelectedArray] = useState([]);
+  const [selectedUserKey, setSelectedUserKey] = useState("");
+  const dispatch = useDispatch();
+  const userdata = useSelector((state) => state.workflow);
+  const [workflowData, setWorkflowData] = useState(null);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const onConnect = useCallback(
+    (params) => setEdges((els) => addEdge(params, els)),
+    [setEdges]
+  );
+
+  useEffect(() => {
+    dispatch(Getdata);
+  }, [dispatch]);
+
+  const changeHandler = (event) => {
+    const selectedFile = event.target.files[0];
+
+    setSelectedFileName(selectedFile.name);
+
+    Papa.parse(selectedFile, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        const rowsArray = [];
+        const valuesArray = [];
+
+        results.data.map((d) => {
+          rowsArray.push(Object.keys(d));
+          valuesArray.push(Object.values(d));
+        });
+        setParsedData(results.data);
+        setTableRows(rowsArray[0]);
+        setValues(valuesArray);
+      },
+    });
+  };
+
+  const handlermoveseleted = () => {
+    setSelectedFileName("");
+    setSelectedArray([]);
+    setValues([]);
+    setTableRows([]);
+    setClickUpload(false);
+
+    if (fileInputRef1.current) {
+      fileInputRef1.current.value = "";
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleUpload = () => {
+    toast.success("Uploaded File.......");
+    setTimeout(() => {
+      setClickUpload(true);
+    }, 1000);
+  };
+
+  const handleUserSelect = (event) => {
+    const selectedUser = event.target.value;
+    setSelectedUserKey(selectedUser);
+
+    const selectedUserData = userdata.find(
+      (data) => data.saveduser === selectedUser
     );
-  
-    useEffect(() => {
-      dispatch(Getdata);
-    }, [dispatch]);
-  
-    const changeHandler = (event) => {
-      const selectedFile = event.target.files[0];
-  
-      setSelectedFileName(selectedFile.name);
-  
-      Papa.parse(selectedFile, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-          const rowsArray = [];
-          const valuesArray = [];
-  
-          results.data.map((d) => {
-            rowsArray.push(Object.keys(d));
-            valuesArray.push(Object.values(d));
-          });
-          setParsedData(results.data);
-          setTableRows(rowsArray[0]);
-          setValues(valuesArray);
-        },
-      });
-    };
-  
-    const handlermoveseleted = () => {
-      setSelectedFileName("");
-      setSelectedArray([]);
-      setValues([]);
-      setTableRows([]);
-      setClickUpload(false);
-  
-      if (fileInputRef1.current) {
-        fileInputRef1.current.value = "";
-      }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    };
-  
-    const handleUpload = () => {
-      toast.success("Uploaded File.......");
-      setTimeout(() => {
-        setClickUpload(true);
-      }, 1000);
-    };
-  
-    const handleUserSelect = (event) => {
-      const selectedUser = event.target.value;
-      setSelectedUserKey(selectedUser);
-  
-      const selectedUserData = userdata.find(
-        (data) => data.saveduser === selectedUser
-      );
-  
-      if (selectedUserData) {
-        setWorkflowData(selectedUserData);
-        setEdges(selectedUserData.savedEdges);
-        setNodes(selectedUserData.savedNodes);
-      } else {
-        setWorkflowData(null);
-      }
-    };
-  
-  
+
+    if (selectedUserData) {
+      setWorkflowData(selectedUserData);
+      setEdges(selectedUserData.savedEdges);
+      setNodes(selectedUserData.savedNodes);
+    } else {
+      setWorkflowData(null);
+    }
+  };
 
   return (
     <>
-          <div className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center">
+      <div className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center">
         <div className="container-box px-2 py-2 flex flex-col sm:flex-row sm:justify-between border-pink-800">
           <div className="w-[100%]  bg-[#FFFFFF] rounded-md shadow-md px-4 py-4 border-green-700">
             <div
@@ -185,18 +182,14 @@ const BrowerFile = () => {
         </div>
       </div>
 
-         {/*   */}
+      {/*   */}
 
-           <div
-        className="py-4 mt-20"
-        style={{ width: "100vw", height: "100vh" }}
-      >
-    
-        <div className="border py-2 px-4 w-[20%] m-auto">
+      <div className="py-4 mt-20" style={{ width: "100vw", height: "100vh" }}>
+        <div className="py-2 px-4 w-[20%] m-auto">
           <select
             onChange={handleUserSelect}
             value={selectedUserKey}
-            className="py-2 px-1 text-center"
+            className="py-2 px-8 text-center border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {userdata.map((data, index) => (
               <option className="p-1" key={index}>
@@ -223,9 +216,8 @@ const BrowerFile = () => {
           )}
         </div>
       </div>
-
     </>
-  )
-}
+  );
+};
 
-export default BrowerFile
+export default BrowerFile;

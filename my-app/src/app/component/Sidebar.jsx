@@ -21,10 +21,10 @@ const Sidebar = () => {
   };
     
    const handleDelete = (id) =>{
-    console.log("iddd",id)
+    // console.log("iddd",id)
        dispatch(Deleteflow(id))
        .then((res) =>{
-        console.log("res",res)
+        // console.log("res",res)
          if(res.payload.data.msg=="Post deleted successfully"){
            toast.success(" Delete workspace")
            dispatch(Getdata);

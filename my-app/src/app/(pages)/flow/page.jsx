@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 
 import "reactflow/dist/style.css";
 import { WorkflowPost } from "../../Redux/AppReducer/action";
+import toast, { Toaster } from "react-hot-toast";
 
 const initialNodes = [
   {
@@ -64,6 +65,7 @@ const Page = () => {
     savedNodes: savedNodes,
   };
 
+  // console.log("payload",payload)
 
   const handleSave = () => {
     setSavedNodes(nodes);
@@ -74,6 +76,13 @@ const Page = () => {
         .then((res) => {
           setCurrentStep(2);
           console.log("ress", res);
+          if (res?.payload?.workPost?.savedEdges?.length>0 ) {
+            toast.success("Workspace save see in upload csv");
+          }
+          else{
+            toast.error("something went wrong try again");
+          }
+
         })
         .catch((err) => {
           console.log("err", err);
@@ -190,53 +199,62 @@ const Page = () => {
 
   return (
     <>
-    <PrivateRoute>
+      <PrivateRoute>
+        <div style={{ width: "100vw", height: "100vh" }}>
+          <div className=" flex justify-between">
+            <button
+              onClick={handleGoBackOrDelete}
+              disabled={nodes.length < 2}
+              className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
+            >
+              Delete node
+            </button>
+            <input
+              onChange={(e) => setSavedUser(e.target.value)}
+              className="mt-5 px-4 outline-none"
+              value={saveduser}
+              placeholder="name"
+            />
+            <button
+              onClick={handleSave}
+              className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
+            >
+              {" "}
+              Save Node{" "}
+            </button>
+          </div>
 
-     <div style={{ width: "100vw", height: "100vh" }}>
-      <div className=" flex justify-between">
-        <button
-          onClick={handleGoBackOrDelete}
-          disabled={nodes.length < 2}
-          className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
-        >
-          Delete node
-        </button>
-        <input
-          onChange={(e) => setSavedUser(e.target.value)}
-          className="mt-5 px-4 outline-none"
-          value={saveduser}
-          placeholder="name"
-        />
-        <button
-          onClick={handleSave}
-          className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
-        >
-          {" "}
-          Save Node{" "}
-        </button>
-      </div>
-      <div className=" mt-5 py-2 px-4 w-[50%] m-auto">
-        {currentStep === 0 && <p>Step 1 of 2: Creating nodes</p>}
-        {currentStep === 1 && <p>Step 2 of 2: Saving nodes</p>}
-      </div>
+          <div className="mt-5 py-2 px-4 w-[50%] m-auto bg-gray-100 rounded-lg shadow-md">
+            {currentStep === 0 && (
+              <p className="text-lg font-semibold text-gray-800">
+                Step 1 of 2: Creating nodes
+              </p>
+            )}
+            {currentStep === 1 && (
+              <p className="text-lg font-semibold text-gray-800">
+                Step 2 of 2: Saving nodes
+              </p>
+            )}
+          </div>
 
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-        snapToGrid={true}
-        snapGrid={[15, 15]}
-        onEdgeClick={handleEdgeClick}
-        onNodeClick={handleNodeClick}
-        attributionPosition="bottom-left"
-        fitViewOptions={fitViewOptions}
-      ></ReactFlow>
-    </div>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            fitView
+            snapToGrid={true}
+            snapGrid={[15, 15]}
+            onEdgeClick={handleEdgeClick}
+            onNodeClick={handleNodeClick}
+            attributionPosition="bottom-left"
+            fitViewOptions={fitViewOptions}
+          ></ReactFlow>
+        </div>
+      </PrivateRoute>
 
-    </PrivateRoute>
+      <Toaster />
     </>
   );
 };
