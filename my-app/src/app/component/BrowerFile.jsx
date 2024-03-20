@@ -267,7 +267,7 @@ const BrowerFile = () => {
               attributionPosition="bottom-left"
             />
           ) : (
-            <p className="text-center py-2">No workflow data available</p>
+            <p className="w-[30%] m-auto  px-2 py-2">No workflow data available</p>
           )}
         </div>
       </div>

@@ -21,10 +21,10 @@ const Sidebar = () => {
   };
     
    const handleDelete = (id) =>{
-    // console.log("iddd",id)
+   
        dispatch(Deleteflow(id))
        .then((res) =>{
-        // console.log("res",res)
+      
          if(res.payload.data.msg=="Post deleted successfully"){
            toast.success(" Delete workspace")
            dispatch(Getdata);
@@ -38,27 +38,24 @@ const Sidebar = () => {
 
   return (
     <>
-      <div onClick={handleHome} className="px-6 py-4 mb-2">
-       
-        <h2 className="font-semibold"> User workspace </h2>
+      <div
+        onClick={handleHome}
+        className="flex justify-between items-center px-6 py-4 mb-2"
+      >
+        <h2 className="font-semibold">User workspace</h2>
       </div>
       {userdata.length > 0 &&
         userdata.map((el) => {
           return (
             <div
               key={el._id}
-              className=" flex flex-col justify-center px-4 py-4 border-red-600"
+              className="flex justify-between items-center px-4 py-4 border-red-600"
             >
-              <div className="flex items-center gap-2 py-2 mb-6">
-                <span className="material-icons mr-2">{el.saveduser}</span>
-
-                <span className="text-sm font-medium font-Nunito">
-                  <MdDeleteSweep
-                    className="text-xl"
-                    onClick={() => handleDelete(el._id)}
-                  />
-                </span>
-              </div>
+              <span className="mr-2">{el.saveduser}</span>
+              <MdDeleteSweep
+                className="text-xl cursor-pointer"
+                onClick={() => handleDelete(el._id)}
+              />
             </div>
           );
         })}
