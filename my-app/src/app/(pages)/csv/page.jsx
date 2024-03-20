@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
 
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -56,8 +56,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-
-      {/* <Toaster /> */}
     </>
   );
 };

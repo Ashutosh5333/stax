@@ -102,6 +102,15 @@ const deletefailure = () => {
   };
 };
 
+export const Userlogged = (payload) => ({
+      type: types.LOGGEDUSER,
+      payload
+     
+})
+
+  //  Logged user
+   
+
 export const Getdata = (dispatch) => {
   const utoken = localStorage.getItem("token");
   const token = utoken ? JSON.parse(utoken) : null;

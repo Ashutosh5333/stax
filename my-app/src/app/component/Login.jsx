@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
-import { LoginPost } from "../Redux/AppReducer/action";
+import { LoginPost, Userlogged } from "../Redux/AppReducer/action";
 export const Login = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -51,6 +51,8 @@ export const Login = () => {
         if(res?.payload?.msg=="Login successful"){
           toast.success("Login successful");
           localStorage.setItem("token",JSON.stringify(res?.payload?.token))
+          localStorage.setItem("user",JSON.stringify(res?.payload?.data))
+          dispatch(Userlogged(res?.payload?.data))
          }
          if(res?.type=="LOGINPOSTFAILURE"){
           toast.error("Check Password");
