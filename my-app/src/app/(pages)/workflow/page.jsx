@@ -5,6 +5,7 @@ import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType,useReactFlo
 import "reactflow/dist/style.css";
 import { WorkflowPost} from "../../Redux/AppReducer/action"
 import "./index.css"
+import {PrivateRoute} from "../../Privateroute/PrivateRoute"
 const initialNodes = [
   {
     id: "0",
@@ -44,7 +45,7 @@ const Page = () => {
     savedNodes:savedNodes
  }
 
-   console.log("payloaddd1",payload)
+  //  console.log("payloaddd1",payload)
 
   const handleSave = () => {
     setSavedNodes(nodes);
@@ -107,7 +108,8 @@ const Page = () => {
   return (
    
     <div  style={{ width: "100vw", height: "100vh" }}>
-        
+        {/* <PrivateRoute/> */}
+
         <div className=" flex justify-between">
          <button onClick={handleGoBackOrDelete} disabled={nodes.length<2} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center ">
              Delete node
@@ -135,7 +137,6 @@ const Page = () => {
         nodeOrigin={[0.5, 0]}
       />
     </div>
-
       </ReactFlowProvider>
       </div>
   );

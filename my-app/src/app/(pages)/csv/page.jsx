@@ -9,6 +9,7 @@ import { Getdata } from "@/app/Redux/AppReducer/action";
 import { ReactFlow, useNodesState, addEdge, useEdgesState } from "reactflow";
 import "reactflow/dist/style.css";
 import "../workflow/index.css"
+import PrivateRoute from "@/app/Privateroute/PrivateRoute";
 const Page = () => {
   const fileInputRef = useRef("");
   const fileInputRef1 = useRef("");
@@ -97,11 +98,11 @@ const Page = () => {
     }
   };
 
-   console.log("noeddddd",nodes,edges)
-   console.log("workflow",workflowData)
+  
  
   return (
     <>
+     <PrivateRoute>
       <div
         className="Browser-continer relative top-[15%] sm:top-16 w-[90%] sm:w-[60%] m-auto text-center"
       >
@@ -218,6 +219,7 @@ const Page = () => {
           )}
         </div>
       </div>
+      </PrivateRoute>
 
       <Toaster />
     </>

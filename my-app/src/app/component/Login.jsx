@@ -50,6 +50,7 @@ export const Login = () => {
         console.log("res", res);
         if(res?.payload?.msg=="Login successful"){
           toast.success("Login successful");
+          localStorage.setItem("token",JSON.stringify(res?.payload?.token))
          }
          if(res?.type=="LOGINPOSTFAILURE"){
           toast.error("Check Password");
