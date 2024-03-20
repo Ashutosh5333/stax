@@ -1,10 +1,16 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import ReactFlow, { useNodesState, useEdgesState, addEdge,MarkerType, ReactFlowProvider } from "reactflow";
+import ReactFlow, {
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  MarkerType,
+  ReactFlowProvider,
+} from "reactflow";
 import { useDispatch } from "react-redux";
 
 import "reactflow/dist/style.css";
-import { WorkflowPost} from "../../Redux/AppReducer/action"
+import { WorkflowPost } from "../../Redux/AppReducer/action";
 
 const initialNodes = [
   {
@@ -21,11 +27,11 @@ const initialEdges = [
     source: "0",
     type: "smoothstep",
     target: "1",
-    label: '+',
+    label: "+",
     animated: true,
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
-    labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
+    labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
     markerEnd: {
       type: MarkerType.ArrowClosed,
     },
@@ -49,14 +55,13 @@ const Page = () => {
   const [savedEdges, setSavedEdges] = useState([]);
   const [saveduser, setSavedUser] = useState("Project 1");
   const [currentStep, setCurrentStep] = useState(0);
-   const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-
-  const payload ={
-    saveduser:saveduser,
-    savedEdges:savedEdges,
-    savedNodes:savedNodes
- }
+  const payload = {
+    saveduser: saveduser,
+    savedEdges: savedEdges,
+    savedNodes: savedNodes,
+  };
 
   //  console.log("payloaddd1",payload)
 
@@ -64,119 +69,154 @@ const Page = () => {
     setSavedNodes(nodes);
     setSavedEdges(edges);
     setCurrentStep(1);
-      setTimeout(() => {
-         dispatch(WorkflowPost(payload))
-    .then((res)=>{
-      setCurrentStep(2);
-      console.log("ress",res)
-    })
-    .catch((err) =>{
-      console.log("err",err)
-    })
-      }, 2000);
+    setTimeout(() => {
+      dispatch(WorkflowPost(payload))
+        .then((res) => {
+          setCurrentStep(2);
+          console.log("ress", res);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }, 2000);
   };
-  
+
   const initialNodeType = {
-    id : getId(),
-    type : 'default',
-    position : { x: initialNodes[0].position.x, y: nodes.length*100},
-    data: { label: 'New Node' },
-    width: 150
-  }
+    id: getId(),
+    type: "default",
+    position: { x: initialNodes[0].position.x, y: nodes.length * 100 },
+    data: { label: "New Node" },
+    width: 150,
+  };
 
   const initialEdge = {
-    id: String(parseInt(Math.random(100000000)*1000000)),
-    source: nodes[nodes.length-1].id,
-    target: nodes[nodes.length-1].id,
-    label: '+',
+    id: String(parseInt(Math.random(100000000) * 1000000)),
+    source: nodes[nodes.length - 1].id,
+    target: nodes[nodes.length - 1].id,
+    label: "+",
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
-    labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
+    labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
     markerEnd: {
       type: MarkerType.ArrowClosed,
     },
-  }
+  };
   const onConnect = useCallback(
     (params) => setEdges((els) => addEdge(params, els)),
     [setEdges]
   );
-  
-  useEffect(()=>{
-    if(addnode){
-      const findFirstNode = nodes.find(item=>item.id===initialEdge.target)
-      setEdges((eds) => eds.concat({
-        ...initialEdge,
-        // source: parentNode.id,
-      }));
+
+  useEffect(() => {
+    if (addnode) {
+      const findFirstNode = nodes.find(
+        (item) => item.id === initialEdge.target
+      );
+      setEdges((eds) =>
+        eds.concat({
+          ...initialEdge,
+          // source: parentNode.id,
+        })
+      );
       setAddnode(false);
       setParentNode(null);
     }
-    if(addChildeNode){
-      setEdges((eds) => eds.concat({
-        id: String(parseInt(Math.random(100000000)*1000000)),
-        source: parentNode.id,
-        target: nodes[nodes.length-1].id,
-        // label: '+',
-        labelBgPadding: [8, 4],
-        labelBgBorderRadius: 4,
-        labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-        },
-      }));
+    if (addChildeNode) {
+      setEdges((eds) =>
+        eds.concat({
+          id: String(parseInt(Math.random(100000000) * 1000000)),
+          source: parentNode.id,
+          target: nodes[nodes.length - 1].id,
+          // label: '+',
+          labelBgPadding: [8, 4],
+          labelBgBorderRadius: 4,
+          labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+        })
+      );
       setAddChildeNode(false);
       setParentNode(null);
     }
-  },[nodes])
+  }, [nodes]);
 
   const handleEdgeClick = (param, data) => {
     // console.log(data);
-    const findSourceNode = nodes.find((item)=>item.id===data.source);
-    setNodes((nds) => nds.concat({...initialNodeType, 
-        data:{ parentId: data.target, ...initialNodeType.data }}));
+    const findSourceNode = nodes.find((item) => item.id === data.source);
+    setNodes((nds) =>
+      nds.concat({
+        ...initialNodeType,
+        data: { parentId: data.target, ...initialNodeType.data },
+      })
+    );
     setParentNode(findSourceNode);
     setAddnode(true);
-  }
+  };
 
   const handleNodeClick = (e, data) => {
-    const filterNodeswithSameSource = nodes.filter((node)=>node?.data?.parentId===data?.id);
-    setNodes((nds) => nds.concat({
-      id : getId(),
-      type : 'default',
-      position : { x: data.position.x+filterNodeswithSameSource.length*160, y: data.position.y+100},
-      data: { label: 'New Node', parentId: data.id },
-      width: 150,
-    }));
+    const filterNodeswithSameSource = nodes.filter(
+      (node) => node?.data?.parentId === data?.id
+    );
+    setNodes((nds) =>
+      nds.concat({
+        id: getId(),
+        type: "default",
+        position: {
+          x: data.position.x + filterNodeswithSameSource.length * 160,
+          y: data.position.y + 100,
+        },
+        data: { label: "New Node", parentId: data.id },
+        width: 150,
+      })
+    );
     setAddChildeNode(true);
     setParentNode(data);
-  }
+  };
 
-   
   const handleGoBackOrDelete = () => {
-      const filteredNodes = nodes.filter(node => node.id !== nodes[nodes.length - 1].id);
-  
-      const filteredEdges = edges.filter(edge => edge.source !== nodes[nodes.length - 1].id && edge.target !== nodes[nodes.length - 1].id);
-  
-     setNodes(filteredNodes);
-      setEdges(filteredEdges);
-  }
+    const filteredNodes = nodes.filter(
+      (node) => node.id !== nodes[nodes.length - 1].id
+    );
 
+    const filteredEdges = edges.filter(
+      (edge) =>
+        edge.source !== nodes[nodes.length - 1].id &&
+        edge.target !== nodes[nodes.length - 1].id
+    );
+
+    setNodes(filteredNodes);
+    setEdges(filteredEdges);
+  };
 
   return (
-    <div  style={{ width: "100vw", height: "100vh" }}>
-        
-        <div className=" flex justify-between">
-         <button onClick={handleGoBackOrDelete} disabled={nodes.length<2} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center ">
-             Delete node
-          </button>
-         <input onChange={(e)=>setSavedUser(e.target.value)} className="mt-5 px-4 outline-none" value={saveduser} placeholder="name" />
-        <button  onClick={handleSave} className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "> Save Node </button>
-        </div>
-        <div className="border-2 mt-5 py-2 px-4 w-[50%] m-auto">
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <div className=" flex justify-between">
+        <button
+          onClick={handleGoBackOrDelete}
+          disabled={nodes.length < 2}
+          className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
+        >
+          Delete node
+        </button>
+        <input
+          onChange={(e) => setSavedUser(e.target.value)}
+          className="mt-5 px-4 outline-none"
+          value={saveduser}
+          placeholder="name"
+        />
+        <button
+          onClick={handleSave}
+          className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "
+        >
+          {" "}
+          Save Node{" "}
+        </button>
+      </div>
+      <div className=" mt-5 py-2 px-4 w-[50%] m-auto">
         {currentStep === 0 && <p>Step 1 of 2: Creating nodes</p>}
         {currentStep === 1 && <p>Step 2 of 2: Saving nodes</p>}
       </div>
-       
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -191,7 +231,7 @@ const Page = () => {
         attributionPosition="bottom-left"
         fitViewOptions={fitViewOptions}
       ></ReactFlow>
-      </div>
+    </div>
   );
 };
 

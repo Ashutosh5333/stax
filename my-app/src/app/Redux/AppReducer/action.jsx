@@ -1,28 +1,27 @@
-import * as types from "./ActionTypes"
-import axios from "axios"
+import * as types from "./ActionTypes";
+import axios from "axios";
 
 const getdatareq = () => {
-    return {
-      type: types.GETDATAREQ,
-    };
+  return {
+    type: types.GETDATAREQ,
   };
-  
-  const getdatasuccess = (payload) => {
-    return {
-      type: types.GETDATASUCESS,
-      payload,
-    };
-  };
-  
-  const getdatafailure = () => {
-    return {
-      type: types.GETDATAFAILURE,
-    };
-  };
+};
 
-  // create workflow post 
+const getdatasuccess = (payload) => {
+  return {
+    type: types.GETDATASUCESS,
+    payload,
+  };
+};
 
-  
+const getdatafailure = () => {
+  return {
+    type: types.GETDATAFAILURE,
+  };
+};
+
+// create workflow post
+
 const Createdatareq = () => {
   return {
     type: types.CREATEWORKFLOWREQ,
@@ -63,79 +62,136 @@ const loginfailure = () => {
   };
 };
 
-// create workflow post 
-
+// create workflow post
 
 const signupreq = () => {
-return {
-  type: types.SIGNUPREQ,
-};
+  return {
+    type: types.SIGNUPREQ,
+  };
 };
 
 const signupsuccess = (payload) => {
-return {
-  type: types.SIGNUPSUCESS,
-  payload,
-};
+  return {
+    type: types.SIGNUPSUCESS,
+    payload,
+  };
 };
 
 const signupfailure = () => {
-return {
-  type: types.SIGNUPFAILURE,
+  return {
+    type: types.SIGNUPFAILURE,
+  };
 };
+
+const deletereq = () => {
+  return {
+    type: types.DELETEFLOWREQ,
+  };
 };
 
+const deletesuccess = (payload) => {
+  return {
+    type: types.DELETEFLOWSUCESS,
+    payload
+  };
+};
 
+const deletefailure = () => {
+  return {
+    type: types.DELETEFLOWFAILURE,
+  };
+};
 
+export const Getdata = (dispatch) => {
+  const utoken = localStorage.getItem("token");
+  const token = utoken ? JSON.parse(utoken) : null;
 
- export  const Getdata = (dispatch) => {
-      dispatch(getdatareq())
-      return axios.get(`https://pear-average-caterpillar.cyclic.app/work/data`)
-      .then((res) =>{
-  return     dispatch(getdatasuccess(res.data))
-      })
-      .catch((err) =>{
- return    dispatch(getdatafailure())
-      })
-   }
-  
-   
-   
- export  const WorkflowPost = (payload) => (dispatch) => {
-  dispatch(Createdatareq())
-  return axios.post(`https://pear-average-caterpillar.cyclic.app/work/create` ,payload)
-  .then((res) =>{
-return     dispatch(Createdatasuccess(res.data))
-  })
-  .catch((err) =>{
-return    dispatch(Createdatafailure())
-  })
-}
+  dispatch(getdatareq());
+  return axios
+    .get(`https://pear-average-caterpillar.cyclic.app/work/valdata`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      return dispatch(getdatasuccess(res.data));
+    })
+    .catch((err) => {
+      return dispatch(getdatafailure());
+    });
+};
 
+export const WorkflowPost = (payload) => (dispatch) => {
+  dispatch(Createdatareq());
+  const utoken = localStorage.getItem("token");
+  const token = utoken ? JSON.parse(utoken) : null;
 
-//  Signup 
+  return axios
+    .post(
+      `https://pear-average-caterpillar.cyclic.app/work/valcreate`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      return dispatch(Createdatasuccess(res.data));
+    })
+    .catch((err) => {
+      return dispatch(Createdatafailure());
+    });
+};
 
-export  const SignupPost = (payload) => (dispatch) => {
-  dispatch(signupreq())
-  return axios.post(`https://pear-average-caterpillar.cyclic.app/user/register` ,payload)
-  .then((res) =>{
-return     dispatch(signupsuccess(res.data))
-  })
-  .catch((err) =>{
-return    dispatch(signupfailure())
-  })
-}
+//  Signup
 
-//  Login 
+export const SignupPost = (payload) => (dispatch) => {
+  dispatch(signupreq());
+  return axios
+    .post(`https://pear-average-caterpillar.cyclic.app/user/register`, payload)
+    .then((res) => {
+      return dispatch(signupsuccess(res.data));
+    })
+    .catch((err) => {
+      return dispatch(signupfailure());
+    });
+};
 
-export  const LoginPost = (payload) => (dispatch) => {
-  dispatch(loginreq())
-  return axios.post(`https://pear-average-caterpillar.cyclic.app/user/login` ,payload)
-  .then((res) =>{
-return     dispatch(loginsuccess(res.data))
-  })
-  .catch((err) =>{
-return    dispatch(loginfailure(err))
-  })
-}
+//  Login
 
+export const LoginPost = (payload) => (dispatch) => {
+  dispatch(loginreq());
+  return axios
+    .post(`https://pear-average-caterpillar.cyclic.app/user/login`, payload)
+    .then((res) => {
+      return dispatch(loginsuccess(res.data));
+    })
+    .catch((err) => {
+      return dispatch(loginfailure(err));
+    });
+};
+
+//   Delete post
+
+export const Deleteflow = (id) => (dispatch) => {
+  const utoken = localStorage.getItem("token");
+  const token = utoken ? JSON.parse(utoken) : null;
+
+  dispatch(deletereq());
+  return axios 
+    .delete(`https://pear-average-caterpillar.cyclic.app/work/valdata/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      return dispatch(deletesuccess(res));
+    })
+    .catch((err) => {
+      return dispatch(deletefailure());
+    });
+};
