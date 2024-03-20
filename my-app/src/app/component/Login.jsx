@@ -49,12 +49,12 @@ export const Login = () => {
   
     dispatch(LoginPost(formData))
       .then((res) => {
-        console.log("res", res);
+       
         if(res?.payload?.msg=="Login successful"){
           toast.success("Login successful");
           localStorage.setItem("token",JSON.stringify(res?.payload?.token))
           localStorage.setItem("user",JSON.stringify(res?.payload?.data))
-          // dispatch(Userlogged(res?.payload?.data))
+        
           router.push("/flow")
          }
          if(res?.type=="LOGINPOSTFAILURE"){

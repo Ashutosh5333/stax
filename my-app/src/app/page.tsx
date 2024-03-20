@@ -10,8 +10,8 @@ export default function Home() {
 
   return (
     <main className=" border-black">
-      <div className="max-w-md py-8 mx-auto mt-8">
-      <ul className="flex justify-between">
+      <div className="max-w-md px-2 py-8 mx-auto mt-8">
+      <ul className="flex text-xl justify-between px-4">
         <li
           onClick={() => setTab('login')}
           className={`mr-4 cursor-pointer ${tab === 'login' ? 'text-blue-500 font-bold' : 'text-gray-500'}`}
@@ -25,7 +25,12 @@ export default function Home() {
           Signup
         </li>
       </ul>
+
+
+      <div className=" mt-10">
       {tab === 'login' ? <Login /> : <Signup />}
+      </div>
+     
     </div>
     </main>
   );
