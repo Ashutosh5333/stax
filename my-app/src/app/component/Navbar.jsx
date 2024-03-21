@@ -67,7 +67,7 @@ const Navbar = () => {
           <div>
             <h1 className="text-white text-lg font-bold">
               <Link href={"/csv"} onClick={handleCsvUploadClick}>
-                Upload Csv{" "}
+                Saved workflow 
               </Link>
             </h1>
           </div>

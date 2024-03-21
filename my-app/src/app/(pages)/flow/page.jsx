@@ -288,7 +288,7 @@ const Page = () => {
             </button>
           </div>
 
-          <div className="mt-5 py-2 px-4 w-[50%] m-auto bg-gray-100 rounded-lg shadow-md">
+          <div className="mt-20 py-2 px-4 w-[50%] m-auto bg-gray-100 rounded-lg shadow-md">
             {currentStep === 0 && (
               <p className="text-lg font-semibold text-gray-800">
                 Step 1 of 2: Creating nodes
