@@ -6,6 +6,8 @@ import ReactFlow, {
   addEdge,
   MarkerType,
   ReactFlowProvider,
+  Background,
+  Controls,
 } from "reactflow";
 import PrivateRoute from "@/app/Privateroute/PrivateRoute";
 import { useDispatch } from "react-redux";
@@ -247,12 +249,12 @@ const Page = () => {
     } catch (error) {
       console.error("Error converting CSV to JSON:", error);
     }
-  };
+  }
 
   return (
     <>
       <PrivateRoute>
-        <div style={{ width: "100vw", height: "100vh" }}>
+        <div style={{ width: "100vw", height: "80vh" }}>
           <div className=" flex justify-between">
             <button
               onClick={handleGoBackOrDelete}
@@ -314,7 +316,10 @@ const Page = () => {
             onNodeClick={handleNodeClick}
             attributionPosition="bottom-left"
             fitViewOptions={fitViewOptions}
-          ></ReactFlow>
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
         </div>
       </PrivateRoute>
 
