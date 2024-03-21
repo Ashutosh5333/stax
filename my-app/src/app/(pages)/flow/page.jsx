@@ -9,7 +9,7 @@ import ReactFlow, {
 } from "reactflow";
 import PrivateRoute from "@/app/Privateroute/PrivateRoute";
 import { useDispatch } from "react-redux";
-
+import Papa from "papaparse";
 import "reactflow/dist/style.css";
 import { WorkflowPost } from "../../Redux/AppReducer/action";
 import toast, { Toaster } from "react-hot-toast";
@@ -57,6 +57,7 @@ const Page = () => {
   const [savedEdges, setSavedEdges] = useState([]);
   const [saveduser, setSavedUser] = useState("Project 1");
   const [currentStep, setCurrentStep] = useState(0);
+  const [parseddata, setParsedData] = useState([]);
   const dispatch = useDispatch();
 
   const payload = {
@@ -76,13 +77,11 @@ const Page = () => {
         .then((res) => {
           setCurrentStep(2);
           console.log("ress", res);
-          if (res?.payload?.workPost?.savedEdges?.length>0 ) {
+          if (res?.payload?.workPost?.savedEdges?.length > 0) {
             toast.success("Workspace save see in upload csv");
-          }
-          else{
+          } else {
             toast.error("something went wrong try again");
           }
-
         })
         .catch((err) => {
           console.log("err", err);
@@ -197,6 +196,59 @@ const Page = () => {
     setEdges(filteredEdges);
   };
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          const parsedData = results.data;
+          const newNodes = [];
+          const newEdges = [];
+
+          parsedData.forEach((data, index) => {
+            const nodeId = getId();
+            const nodes = [];
+            const edges = [];
+
+            Object.entries(data).forEach(([key, value]) => {
+              const newNode = {
+                id: `${nodeId}_${key}`,
+                type: "ResizableNode",
+                position: {
+                  x: 100 + Object.keys(data).indexOf(key) * 200,
+                  y: 100 + index * 100,
+                },
+                data: { label: value },
+              };
+              nodes.push(newNode);
+              if (nodes.length > 1) {
+                const edge = {
+                  id: getId(),
+                  source: nodes[nodes.length - 2].id,
+                  target: newNode.id,
+                };
+                edges.push(edge);
+              }
+            });
+
+            newNodes.push(...nodes);
+            newEdges.push(...edges);
+          });
+
+          setNodes((prevNodes) => [...prevNodes, ...newNodes]);
+          setEdges((prevEdges) => [...prevEdges, ...newEdges]);
+          setParsedData(parsedData);
+        },
+      });
+    } catch (error) {
+      console.error("Error converting CSV to JSON:", error);
+    }
+  };
+
   return (
     <>
       <PrivateRoute>
@@ -215,6 +267,18 @@ const Page = () => {
               value={saveduser}
               placeholder="name"
             />
+
+            <div className=" rounded border-2 py-2 mt-5  px-4 m-auto flex items-center justify-center text-center ">
+              <label htmlFor="file-upload">Upload CSV</label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
+            </div>
+
             <button
               onClick={handleSave}
               className="bg-green-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center "

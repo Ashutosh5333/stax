@@ -15,6 +15,23 @@ const initialNodes = [
   },
 ];
 
+const initialEdges = [
+  {
+    id: "edges-e5-7",
+    source: "0",
+    type: "smoothstep",
+    target: "1",
+    label: "+",
+    animated: true,
+    labelBgPadding: [8, 4],
+    labelBgBorderRadius: 4,
+    labelBgStyle: { fill: "#FFCC00", color: "#fff", fillOpacity: 0.7 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
+  },
+];
+
 
 
 let id = 1;
@@ -24,7 +41,7 @@ const Page = () => {
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { screenToFlowPosition } = useReactFlow();
   const [currentStep, setCurrentStep] = useState(0);
   const onConnect = useCallback(
@@ -108,7 +125,7 @@ const Page = () => {
   return (
    
     <div  style={{ width: "100vw", height: "100vh" }}>
-        {/* <PrivateRoute/> */}
+      
 
         <div className=" flex justify-between">
          <button onClick={handleGoBackOrDelete} disabled={nodes.length<2} className="bg-red-700 rounded py-2 mt-5 text-[#ffffff] px-4 m-auto flex items-center justify-center text-center ">

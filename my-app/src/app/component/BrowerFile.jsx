@@ -35,7 +35,7 @@ const BrowerFile = () => {
     dispatch(Getdata);
   }, [dispatch]);
 
-  const changeHandler = (event) => {
+    const changeHandler = (event) => {
     const selectedFile = event.target.files[0];
 
     setSelectedFileName(selectedFile.name);
@@ -80,10 +80,7 @@ const BrowerFile = () => {
     }, 1000);
   };
 
-  //  console.log("parsedata",parsedData)
-
-  //  console.log("workflowData",workflowData)
-  //  console.log("suerdata",userdata)
+  
 
   const handleUserSelect = (event) => {
     const selectedUser = event.target.value;
