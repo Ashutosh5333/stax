@@ -263,7 +263,7 @@ const Page = () => {
             </button>
             <input
               onChange={(e) => setSavedUser(e.target.value)}
-              className="mt-5 px-4 outline-none"
+              className="mt-5 px-2 border-2 rounded outline-none"
               value={saveduser}
               placeholder="name"
             />
